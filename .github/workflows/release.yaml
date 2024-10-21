@@ -42,7 +42,7 @@ jobs:
       - envs_to_release
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJson(needs.envs_to_release.outputs.environments) }}
+      matrix: ${{ fromJson(needs.envs_to_release.outputs.matrix) }}
     steps:
       - name: Upgrade environment
         uses: ./.github/workflows/upgrade.yml
