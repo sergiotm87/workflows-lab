@@ -22,13 +22,18 @@ jobs:
     name: Get environments to release
     needs: promote
     runs-on: ubuntu-latest
+#    outputs:
+#      environments: ${{ steps.set-env.outputs.environments }}
+#    steps:
+#      - name: Get environments
+#        id: set-environments
+#        run: |
+#          echo "environments={\"environments\":[{\"name\":\"dev\",\"config\":\"Debug\"},{\"name\":\"pre\",\"config\":\"Release\"}]}" >> $GITHUB_OUTPUT
     outputs:
-      environments: ${{ steps.set-env.outputs.environments }}
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - name: Get environments
-        id: set-environments
-        run: |
-          echo "environments={\"environments\":[{\"name\":\"dev\",\"config\":\"Debug\"},{\"name\":\"pre\",\"config\":\"Release\"}]}" >> $GITHUB_OUTPUT
+    - id: set-matrix
+      run: echo "::set-output name=matrix::{\"include\":[{\"name\":\"dev\",\"config\":\"Debug\"},{\"name\":\"pre\",\"config\":\"Release\"}]}"
 
   execute-upgrades:
     name: Execute upgrades
