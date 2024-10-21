@@ -29,7 +29,8 @@ jobs:
         id: set-env
         run: |
           # Get all environments
-          echo "::set-output name=envs::$(echo '[\"dev\",\"pre\",\"pro\"]')"
+          environments=[\"dev\",\"pre\",\"pro\"]
+          echo "environments=$json_output" | tee -a "$GITHUB_OUTPUT"
 
   execute-upgrades:
     name: Execute upgrades
