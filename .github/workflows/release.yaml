@@ -29,8 +29,8 @@ jobs:
         id: set-env
         run: |
           # Get all environments
-          echo "::set-output name=envs::[\"dev\",\"pre\",\"pro\"]"
-  
+          echo "::set-output name=envs::$(echo '[\"dev\",\"pre\",\"pro\"]')"
+
   execute-upgrades:
     name: Execute upgrades
     needs:
@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        environment: ${{ fromJson(needs.obs_to_release.outputs.environments) }}
+        environment: ${{ fromJson(needs.envs_to_release.outputs.environments) }}
     steps:
       - name: Upgrade environment
         uses: ./.github/workflows/upgrade.yml
