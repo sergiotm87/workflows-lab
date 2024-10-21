@@ -35,7 +35,7 @@ jobs:
     name: Execute upgrades
     needs:
       - promote
-      - obs_to_release
+      - envs_to_release
     runs-on: ubuntu-latest
     strategy:
       matrix:
