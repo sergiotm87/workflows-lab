@@ -26,7 +26,7 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
     - id: set-matrix
-      run: echo "name=matrix::{\"include\":[{\"name\":\"dev\",\"config\":\"Debug\"},{\"name\":\"pre\",\"config\":\"Release\"}]}"  >> $GITHUB_OUTPUT
+      run: echo "::set-output name=matrix::{\"include\":[{\"name\":\"dev\",\"config\":\"Debug\"},{\"name\":\"pre\",\"config\":\"Release\"}]}"
 
   execute-upgrades:
     name: Execute upgrades
