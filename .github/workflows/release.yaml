@@ -23,14 +23,12 @@ jobs:
     needs: promote
     runs-on: ubuntu-latest
     outputs:
-      environments: ${{ steps.set-env.outputs.envs }}
+      environments: ${{ steps.set-env.outputs.environments }}
     steps:
-      - name: Calculate environments
-        id: set-env
+      - name: Get environments
+        id: set-environments
         run: |
-          # Get all environments
-          environments=[\"dev\",\"pre\",\"pro\"]
-          echo "environments=$json_output" | tee -a "$GITHUB_OUTPUT"
+          echo "environments={\"environments\":[{\"name\":\"dev\",\"config\":\"Debug\"},{\"name\":\"pre\",\"config\":\"Release\"}]}" >> $GITHUB_OUTPUT
 
   execute-upgrades:
     name: Execute upgrades
@@ -39,11 +37,10 @@ jobs:
       - envs_to_release
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        environment: ${{ fromJson(needs.envs_to_release.outputs.environments) }}
+      matrix: ${{ fromJson(needs.envs_to_release.outputs.environments) }}
     steps:
       - name: Upgrade environment
         uses: ./.github/workflows/upgrade.yml
         with:
-          environment: ${{ matrix.environment }}
+          environment: ${{ matrix.name }}
           release-name: ${{ github.ref_name }}
