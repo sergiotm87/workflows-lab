@@ -1,0 +1,50 @@
+name: Test-Release
+run-name: Release ${{ github.ref_name }}
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  promote:
+    name: Promote
+    runs-on: ubuntu-latest
+    secrets: inherit
+    steps:
+      - name: Promote
+        id: promote
+        shell: bash
+        run: |
+          echo "Promote"
+
+  envs_to_release:
+    name: Get environments to release
+    needs: promote
+    runs-on: ubuntu-latest
+    outputs:
+      environments: ${{ steps.set-env.outputs.envs }}
+    steps:
+      - name: Calculate environments
+        id: set-env
+        run: |
+          # Get all environments
+          echo "::set-output name=envs::[\"dev\",\"pre\",\"pro\"]"
+  
+  execute-upgrades:
+    name: Execute upgrades
+    needs:
+      - promote
+      - obs_to_release
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: ${{ fromJson(needs.obs_to_release.outputs.environments) }}
+    steps:
+      - name: Upgrade environment
+        uses: ./.github/workflows/upgrade.yml
+        with:
+          environment: ${{ matrix.environment }}
+          release-name: ${{ github.ref_name }}
+    secrets: inherit

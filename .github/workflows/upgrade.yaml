@@ -1,0 +1,26 @@
+name: Test-Upgrade
+run-name: Upgrade ${{ inputs.environment }} to ${{inputs.release-name }}
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: Deploy environment
+        required: true
+        default: dev
+        type: string
+      release-name:
+        description: Release name
+        required: false
+        default: ''
+        type: string
+
+jobs:
+  upgrade:
+    name: Upgrade
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upgrade
+        id: upgrade
+        shell: bash
+        run: |
+          echo "Upgrade ${{ secrets.ENVIRONMENT }} to ${{ inputs.release-name }}"
