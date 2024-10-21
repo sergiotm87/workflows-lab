@@ -22,13 +22,6 @@ jobs:
     name: Get environments to release
     needs: promote
     runs-on: ubuntu-latest
-#    outputs:
-#      environments: ${{ steps.set-env.outputs.environments }}
-#    steps:
-#      - name: Get environments
-#        id: set-environments
-#        run: |
-#          echo "environments={\"environments\":[{\"name\":\"dev\",\"config\":\"Debug\"},{\"name\":\"pre\",\"config\":\"Release\"}]}" >> $GITHUB_OUTPUT
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -45,7 +38,7 @@ jobs:
       matrix: ${{ fromJson(needs.envs_to_release.outputs.matrix) }}
     steps:
       - name: Upgrade environment
-        uses: ./.github/workflows/upgrade.yml
+        uses: ./.github/workflows/upgrade.yml@main
         with:
           environment: ${{ matrix.name }}
           release-name: ${{ github.ref_name }}
