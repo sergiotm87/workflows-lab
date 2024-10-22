@@ -38,6 +38,7 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.envs_to_release.outputs.matrix) }}
     uses: ./.github/workflows/upgrade.yml
+    secrets: inherit
     with:
       environment: ${{ matrix.name }}
       release-name: ${{ github.ref_name }}
