@@ -35,7 +35,7 @@ jobs:
       - envs_to_release
     strategy:
       matrix: ${{ fromJson(needs.envs_to_release.outputs.matrix) }}
-    uses: ./.github/workflows/upgrade.yml@main
+    uses: ./.github/workflows/upgrade.yml
     with:
       environment: ${{ matrix.name }}
       release-name: ${{ github.ref_name }}
