@@ -33,12 +33,9 @@ jobs:
     needs:
       - promote
       - envs_to_release
-    runs-on: ubuntu-latest
     strategy:
       matrix: ${{ fromJson(needs.envs_to_release.outputs.matrix) }}
-    steps:
-      - name: Upgrade environment
-        uses: ./.github/workflows/upgrade.yml@main
-        with:
-          environment: ${{ matrix.name }}
-          release-name: ${{ github.ref_name }}
+    uses: ./.github/workflows/upgrade.yml@main
+    with:
+      environment: ${{ matrix.name }}
+      release-name: ${{ github.ref_name }}
