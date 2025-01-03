@@ -1,0 +1,23 @@
+name: Test-Promote
+run-name: Promote ${{ inputs.environment }}
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: Deploy environment
+        required: true
+        default: dev
+        type: string
+
+jobs:
+  promote:
+    name: Promote
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+      - name: Promote
+        id: promote
+        shell: bash
+        run: |
+          echo "Promote ${{ inputs.environment }}"
