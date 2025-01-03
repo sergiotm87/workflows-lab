@@ -8,16 +8,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  promote:
-    name: Promote
-    runs-on: ubuntu-latest
-    steps:
-      - name: Promote
-        id: promote
-        shell: bash
-        run: |
-          echo "Promote"
-
   envs_to_release:
     name: Get environments to release
     needs: promote
@@ -30,12 +20,24 @@ jobs:
         matrix='{ "include": [ {"name": "dev", "config": "Debug"}, {"name": "pre", "config": "Release"} ] }'
         echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
 
+  promote:
+    name: Promote
+    needs:
+      - envs_to_release
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.envs_to_release.outputs.matrix) }}
+    uses: ./.github/workflows/promote.yml
+    with:
+      environment: ${{ matrix.name }}
+
   execute-upgrades:
     name: Execute upgrades
     needs:
-      - promote
       - envs_to_release
+      - promote
     strategy:
+      fail-fast: false
       matrix: ${{ fromJson(needs.envs_to_release.outputs.matrix) }}
     uses: ./.github/workflows/upgrade.yml
     secrets: inherit
